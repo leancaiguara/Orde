@@ -4,6 +4,9 @@ const passport = require("passport");
 const volleyball = require("volleyball");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
+const client = require("./config/db");
+const routes = require("./routes/index");
+
 //init
 const app = express();
 
@@ -28,9 +31,16 @@ app.use(
   })
 );
 //routes
+app.use("/api", routes);
 
 //server
 const PORT = process.env.PORT;
-app.listen(PORT, () => {
-  console.log("server corriendo en puerto", PORT);
-});
+client
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log("server corriendo en puerto", PORT);
+    });
+  })
+  .catch((err) => {
+    console.log(err);
+  });
